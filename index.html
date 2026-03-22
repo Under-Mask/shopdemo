@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>샘플 쇼핑몰 | 메인</title>
+  <meta name="description" content="학습용 샘플 쇼핑몰 메인 페이지입니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="index.html" class="active">홈</a>
+        <a href="products.html">전체상품</a>
+        <a href="products.html#categories">카테고리</a>
+        <a href="mypage.html">마이페이지</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="products.html">검색</a>
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="hero-badges" aria-hidden="true">
+            <span class="badge">국내 배송</span>
+            <span class="badge">로그인 데모</span>
+            <span class="badge">간편결제(추후 PG)</span>
+          </div>
+          <h1>매일 쓰는 것부터<br />감각적인 선택까지</h1>
+          <p>
+            <strong>로그인/회원가입</strong>은 브라우저 <code>localStorage</code> 데모입니다.  
+            기본 계정: <code>demo@shop.local</code> / <code>demo1234</code>
+          </p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="products.html">상품 보러가기</a>
+            <a class="btn" href="signup.html">회원가입</a>
+          </div>
+          <p class="muted" style="margin-top:14px;">결제·실제 회원 DB는 다음 단계에서 서버와 연동합니다.</p>
+        </div>
+
+        <aside class="hero-card" aria-label="추천 상품 카드">
+          <div class="img">히어로 이미지 영역</div>
+          <div class="body">
+            <div class="mini-row">
+              <div>
+                <div class="muted">오늘의 추천</div>
+                <div style="font-weight:800;">데일리 에센셜</div>
+              </div>
+              <div class="price">₩29,900</div>
+            </div>
+            <p class="muted" style="margin:10px 0 0;">이미지는 나중에 실제 사진으로 교체하면 됩니다.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="categories">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>카테고리</h2>
+          <a class="link" href="products.html">전체보기</a>
+        </div>
+        <div class="cats">
+          <div class="cat"><strong>의류</strong><span>베이직부터 시즌 아이템</span></div>
+          <div class="cat"><strong>리빙</strong><span>집안 분위기를 바꾸는 소품</span></div>
+          <div class="cat"><strong>디지털</strong><span>액세서리·주변기기</span></div>
+          <div class="cat"><strong>뷰티</strong><span>데일리 케어 큐레이션</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="products">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>신상품</h2>
+          <a class="link" href="products.html">더보기</a>
+        </div>
+        <div class="grid" id="home-products"></div>
+      </div>
+    </section>
+
+    <section id="support">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>고객센터</h2>
+        </div>
+        <div class="cats" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="cat"><strong>배송 안내</strong><span>영업일 기준 1~3일(데모)</span></div>
+          <div class="cat"><strong>교환/반품</strong><span>수령 후 7일 이내(데모)</span></div>
+          <div class="cat"><strong>문의</strong><span>로그인 후 마이페이지</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color:#0f172a;">샘플 쇼핑몰</strong>
+        <div>대표: 홍길동 · 사업자등록번호: 000-00-00000 · 주소: 서울특별시 (예시)</div>
+        <small>본 페이지는 학습용 데모이며, 실제 사업 정보가 아닙니다.</small>
+      </div>
+      <div>
+        <div><strong>이용안내</strong></div>
+        <div>이용약관 · 개인정보처리방침 · 고객센터</div>
+        <small>© <span id="year"></span> Sample Shop. All rights reserved.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    (function () {
+      var grid = document.getElementById("home-products");
+      if (!grid || !window.SHOP_PRODUCTS) return;
+      function fmt(n) { return "₩" + Number(n).toLocaleString("ko-KR"); }
+      grid.innerHTML = SHOP_PRODUCTS.slice(0, 6)
+        .map(function (p) {
+          return (
+            '<article class="product">' +
+            '<a href="product-detail.html?id=' + encodeURIComponent(p.id) + '" class="thumb" style="text-decoration:none;color:inherit;">' + p.name.slice(0, 8) + "</a>" +
+            '<div class="pbody">' +
+            '<div class="title"><a href="product-detail.html?id=' + encodeURIComponent(p.id) + '" style="color:inherit;">' + p.name + "</a></div>" +
+            '<p class="desc">' + p.desc + "</p>" +
+            '<div class="row">' +
+            '<div class="price">' + fmt(p.price) + "</div>" +
+            '<a class="btn" href="product-detail.html?id=' + encodeURIComponent(p.id) + '">보기</a>' +
+            "</div></div></article>"
+          );
+        })
+        .join("");
+    })();
+  </script>
+</body>
+</html>

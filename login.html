@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>로그인 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <div class="nav-actions" style="margin-left:auto;">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap auth-layout">
+    <div class="card-panel">
+      <h1 class="page-title">로그인</h1>
+      <p class="page-lead">데모 계정: <code>demo@shop.local</code> / <code>demo1234</code></p>
+
+      <div class="alert alert-warn" id="demo-note">
+        비밀번호는 브라우저 저장소에 평문으로 들어갑니다. <strong>실서비스 금지</strong> — 학습용만.
+      </div>
+
+      <form id="form-login" novalidate>
+        <div class="form-group">
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label for="password">비밀번호</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" />
+        </div>
+        <p class="form-error" id="form-error">로그인에 실패했습니다.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">로그인</button>
+          <a class="btn" href="index.html">취소</a>
+        </div>
+      </form>
+
+      <p style="margin-top:20px;" class="muted">
+        계정이 없나요? <a class="link" href="signup.html">회원가입</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("form-login").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var err = document.getElementById("form-error");
+      err.classList.remove("show");
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      var res = ShopAuth.login(email, password);
+      if (!res.ok) {
+        err.textContent = res.message;
+        err.classList.add("show");
+        return;
+      }
+      var next = new URLSearchParams(location.search).get("next");
+      var safe = ["mypage.html", "cart.html", "checkout.html", "index.html"];
+      if (next && safe.indexOf(next) !== -1) {
+        window.location.href = next;
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    if (ShopAuth.isLoggedIn()) {
+      window.location.href = "mypage.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>장바구니 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">홈</a>
+        <a href="products.html">전체상품</a>
+        <a href="cart.html" class="active">장바구니</a>
+        <a href="mypage.html">마이페이지</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding:32px 0 48px;">
+    <h1 class="page-title">장바구니</h1>
+    <p class="page-lead">수량 변경 후 주문하기로 이동할 수 있습니다. (결제는 데모)</p>
+
+    <div id="cart-root"></div>
+
+    <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+      <a class="btn" href="products.html">쇼핑 계속하기</a>
+      <button type="button" class="btn btn-danger" id="btn-clear">비우기</button>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color:#0f172a;">샘플 쇼핑몰</strong>
+        <small>© <span id="year"></span> Sample Shop.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function findProduct(id) {
+      return SHOP_PRODUCTS.find(function (x) { return x.id === id; });
+    }
+
+    function fmt(n) { return "₩" + Number(n).toLocaleString("ko-KR"); }
+
+    function render() {
+      var root = document.getElementById("cart-root");
+      var items = ShopCart.load();
+      if (items.length === 0) {
+        root.innerHTML =
+          '<div class="card-panel"><div class="empty-state"><strong>장바구니가 비어 있습니다.</strong><br />' +
+          '<a class="link" href="products.html">상품 보러가기</a></div></div>';
+        return;
+      }
+
+      var rows = [];
+      var sum = 0;
+      items.forEach(function (line) {
+        var p = findProduct(line.id);
+        if (!p) return;
+        var sub = p.price * line.qty;
+        sum += sub;
+        rows.push(
+          "<tr>" +
+          "<td><a class=\"link\" href=\"product-detail.html?id=" + encodeURIComponent(p.id) + "\">" + p.name + "</a></td>" +
+          "<td>" + fmt(p.price) + "</td>" +
+          "<td>" +
+          '<input type="number" min="1" data-id="' +
+          p.id +
+          '" class="cart-qty" value="' +
+          line.qty +
+          '" style="width:64px;padding:6px;border-radius:8px;border:1px solid var(--border);" />' +
+          "</td>" +
+          "<td>" + fmt(sub) + "</td>" +
+          "<td><button type=\"button\" class=\"btn btn-sm btn-danger\" data-remove=\"" +
+          p.id +
+          '">삭제</button></td>' +
+          "</tr>"
+        );
+      });
+
+      root.innerHTML =
+        '<div class="table-wrap card-panel" style="padding:0;">' +
+        "<table class=\"simple\"><thead><tr>" +
+        "<th>상품</th><th>가격</th><th>수량</th><th>소계</th><th></th>" +
+        "</tr></thead><tbody>" +
+        rows.join("") +
+        "</tbody></table></div>" +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:12px;">' +
+        "<div><strong>합계</strong> <span style=\"font-size:1.25rem;\">" + fmt(sum) + "</span></div>" +
+        '<a class="btn btn-primary" href="checkout.html">주문하기</a>' +
+        "</div>";
+
+      root.querySelectorAll(".cart-qty").forEach(function (inp) {
+        inp.addEventListener("change", function () {
+          var id = inp.getAttribute("data-id");
+          ShopCart.setQty(id, inp.value);
+          render();
+          var badge = document.getElementById("nav-cart-badge");
+          if (badge) badge.textContent = ShopCart.count() > 0 ? "(" + ShopCart.count() + ")" : "";
+        });
+      });
+      root.querySelectorAll("[data-remove]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          ShopCart.remove(btn.getAttribute("data-remove"));
+          render();
+          var badge = document.getElementById("nav-cart-badge");
+          if (badge) badge.textContent = ShopCart.count() > 0 ? "(" + ShopCart.count() + ")" : "";
+        });
+      });
+    }
+
+    document.getElementById("btn-clear").addEventListener("click", function () {
+      if (confirm("장바구니를 비울까요?")) {
+        ShopCart.clear();
+        render();
+        var badge = document.getElementById("nav-cart-badge");
+        if (badge) badge.textContent = "";
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

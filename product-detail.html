@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>상품 상세 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">홈</a>
+        <a href="products.html">전체상품</a>
+        <a href="cart.html">장바구니</a>
+        <a href="mypage.html">마이페이지</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p style="padding-top:16px;"><a class="link" href="products.html">← 상품 목록</a></p>
+
+    <div id="detail-root">
+      <div class="empty-state">
+        <strong>상품을 불러오는 중…</strong>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color:#0f172a;">샘플 쇼핑몰</strong>
+        <small>© <span id="year"></span> Sample Shop.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function qs(name) {
+      var p = new URLSearchParams(window.location.search);
+      return p.get(name);
+    }
+
+    function fmt(n) { return "₩" + Number(n).toLocaleString("ko-KR"); }
+
+    (function () {
+      var id = qs("id");
+      var root = document.getElementById("detail-root");
+      if (!id || !window.SHOP_PRODUCTS) {
+        root.innerHTML =
+          '<div class="empty-state"><strong>상품을 찾을 수 없습니다.</strong><br /><a class="link" href="products.html">목록으로</a></div>';
+        return;
+      }
+      var p = SHOP_PRODUCTS.find(function (x) { return x.id === id; });
+      if (!p) {
+        root.innerHTML =
+          '<div class="empty-state"><strong>상품을 찾을 수 없습니다.</strong><br /><a class="link" href="products.html">목록으로</a></div>';
+        return;
+      }
+
+      root.innerHTML =
+        '<div class="detail-hero">' +
+        '<div class="detail-thumb" aria-hidden="true">' + p.name + "</div>" +
+        "<div>" +
+        '<p class="muted" style="margin:0 0 8px;">' + p.category + "</p>" +
+        '<h1 class="page-title" style="margin-bottom:12px;">' + p.name + "</h1>" +
+        '<p class="page-lead" style="margin-bottom:20px;">' + p.desc + "</p>" +
+        '<p class="price" style="font-size:1.5rem;margin-bottom:20px;">' + fmt(p.price) + "</p>" +
+        '<div class="qty-row" style="margin-bottom:16px;">' +
+        "<label for=\"qty\">수량</label>" +
+        '<input type="number" id="qty" min="1" value="1" />' +
+        "</div>" +
+        '<div style="display:flex; gap:10px; flex-wrap:wrap;">' +
+        '<button type="button" class="btn btn-primary" id="btn-add">장바구니 담기</button>' +
+        '<a class="btn" href="cart.html">장바구니 가기</a>' +
+        "</div></div></div>";
+
+      document.getElementById("btn-add").addEventListener("click", function () {
+        var q = parseInt(document.getElementById("qty").value, 10) || 1;
+        ShopCart.add(p.id, q);
+        var badge = document.getElementById("nav-cart-badge");
+        if (badge) badge.textContent = ShopCart.count() > 0 ? "(" + ShopCart.count() + ")" : "";
+        alert("장바구니에 담았습니다. (데모)");
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>회원가입 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <div class="nav-actions" style="margin-left:auto;">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap auth-layout">
+    <div class="card-panel">
+      <h1 class="page-title">회원가입</h1>
+      <p class="page-lead">가입 후 자동으로 로그인됩니다.</p>
+
+      <div class="alert alert-warn">
+        데모: 비밀번호가 <strong>localStorage에 평문 저장</strong>됩니다. 실제 서비스에서는 서버에 해시 저장 + HTTPS.
+      </div>
+
+      <form id="form-signup" novalidate>
+        <div class="form-group">
+          <label for="name">이름</label>
+          <input type="text" id="name" name="name" required minlength="2" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="password">비밀번호 (4자 이상)</label>
+          <input type="password" id="password" name="password" required minlength="4" autocomplete="new-password" />
+        </div>
+        <p class="form-error" id="form-error">가입에 실패했습니다.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">가입하기</button>
+          <a class="btn" href="login.html">로그인</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("form-signup").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var err = document.getElementById("form-error");
+      err.classList.remove("show");
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      if (password.length < 4) {
+        err.textContent = "비밀번호는 4자 이상으로 해 주세요.";
+        err.classList.add("show");
+        return;
+      }
+      var res = ShopAuth.register(name, email, password);
+      if (!res.ok) {
+        err.textContent = res.message;
+        err.classList.add("show");
+        return;
+      }
+      window.location.href = "mypage.html";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>전체 상품 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">홈</a>
+        <a href="products.html" class="active">전체상품</a>
+        <a href="cart.html">장바구니</a>
+        <a href="mypage.html">마이페이지</a>
+      </nav>
+      <div class="nav-actions">
+        <label class="muted" style="font-size:0.9rem;">카테고리</label>
+        <select id="filter-cat" class="btn" style="padding:8px 10px;">
+          <option value="">전체</option>
+          <option value="의류">의류</option>
+          <option value="리빙">리빙</option>
+          <option value="디지털">디지털</option>
+          <option value="뷰티">뷰티</option>
+        </select>
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding-bottom:48px;">
+    <section id="categories" style="padding-top:32px;">
+      <h1 class="page-title">전체 상품</h1>
+      <p class="page-lead">상품 카드를 클릭하면 상세 페이지로 이동합니다.</p>
+      <div class="grid" id="product-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color:#0f172a;">샘플 쇼핑몰</strong>
+        <div>학습용 데모 사이트입니다.</div>
+        <small>© <span id="year"></span> Sample Shop.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function fmt(n) { return "₩" + Number(n).toLocaleString("ko-KR"); }
+
+    function render(list) {
+      var grid = document.getElementById("product-grid");
+      grid.innerHTML = list
+        .map(function (p) {
+          return (
+            '<article class="product">' +
+            '<a href="product-detail.html?id=' + encodeURIComponent(p.id) + '" class="thumb" style="text-decoration:none;">IMG</a>' +
+            '<div class="pbody">' +
+            '<div class="title"><a href="product-detail.html?id=' + encodeURIComponent(p.id) + '" style="color:inherit;">' + p.name + "</a></div>" +
+            '<p class="desc">' + p.desc + "</p>" +
+            '<p class="muted" style="margin:0;font-size:0.85rem;">' + p.category + "</p>" +
+            '<div class="row">' +
+            '<div class="price">' + fmt(p.price) + "</div>" +
+            '<a class="btn btn-primary" href="product-detail.html?id=' + encodeURIComponent(p.id) + '">상세</a>' +
+            "</div></div></article>"
+          );
+        })
+        .join("");
+    }
+
+    function applyFilter() {
+      var v = document.getElementById("filter-cat").value;
+      var list = SHOP_PRODUCTS.filter(function (p) {
+        return !v || p.category === v;
+      });
+      render(list);
+    }
+
+    document.getElementById("filter-cat").addEventListener("change", applyFilter);
+    applyFilter();
+  </script>
+</body>
+</html>

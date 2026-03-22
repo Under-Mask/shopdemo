@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>마이페이지 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">홈</a>
+        <a href="products.html">전체상품</a>
+        <a href="cart.html">장바구니</a>
+        <a href="mypage.html" class="active">마이페이지</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding:32px 0 48px;">
+    <h1 class="page-title">마이페이지</h1>
+    <p class="page-lead">로그인한 사용자만 이용할 수 있습니다. (데모는 클라이언트만 검증)</p>
+
+    <div id="guest-block" class="card-panel" style="display:none;">
+      <p><strong>로그인이 필요합니다.</strong></p>
+      <a class="btn btn-primary" href="login.html?next=mypage.html">로그인</a>
+      <a class="btn" href="signup.html">회원가입</a>
+    </div>
+
+    <div id="user-block" style="display:none;">
+      <div class="split-2">
+        <div class="card-panel">
+          <h2 style="margin-top:0;font-size:1.15rem;">회원 정보</h2>
+          <p id="user-name"></p>
+          <p id="user-email" class="muted" style="margin-bottom:0;"></p>
+          <p class="muted" style="font-size:0.9rem; margin-top:12px;">
+            실서비스에서는 여기서 비밀번호 변경, 주소록, 쿠폰 등이 붙습니다.
+          </p>
+        </div>
+        <div class="card-panel">
+          <h2 style="margin-top:0;font-size:1.15rem;">주문 내역</h2>
+          <p class="muted">데모에서는 서버에 주문이 저장되지 않습니다.</p>
+          <p class="muted">다음 단계: 주문 API + DB 연동 후 목록 표시.</p>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table class="simple">
+              <thead><tr><th>주문번호</th><th>상태</th><th>비고</th></tr></thead>
+              <tbody>
+                <tr><td colspan="3" style="text-align:center;color:var(--muted);">내역 없음 (데모)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color:#0f172a;">샘플 쇼핑몰</strong>
+        <small>© <span id="year"></span> Sample Shop.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    var guest = document.getElementById("guest-block");
+    var userBlock = document.getElementById("user-block");
+
+    if (!ShopAuth.isLoggedIn()) {
+      guest.style.display = "block";
+    } else {
+      userBlock.style.display = "block";
+      var u = ShopAuth.currentUser();
+      document.getElementById("user-name").innerHTML = "<strong>" + u.name + "</strong> 님, 환영합니다.";
+      document.getElementById("user-email").textContent = u.email;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>주문 완료 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <div class="nav-actions" style="margin-left:auto;">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap auth-layout">
+    <div class="card-panel" style="text-align:center;">
+      <h1 class="page-title" style="color:var(--ok);">주문이 접수되었습니다 (데모)</h1>
+      <p class="page-lead">실제로는 주문번호가 발급되고, PG 결제·재고 차감·알림톡이 이어집니다.</p>
+      <a class="btn btn-primary" href="index.html">홈으로</a>
+      <a class="btn" href="products.html">쇼핑 계속</a>
+    </div>
+  </main>
+
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+</body>
+</html>

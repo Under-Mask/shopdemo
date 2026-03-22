@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>주문/결제 | 샘플 쇼핑몰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark"></span>
+        <span>샘플 쇼핑몰</span>
+      </a>
+      <nav class="nav-links">
+        <a href="cart.html">장바구니</a>
+        <a href="mypage.html">마이페이지</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary btn-sm" href="cart.html">장바구니 <span id="nav-cart-badge"></span></a>
+        <span id="nav-auth"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding:32px 0 48px;">
+    <h1 class="page-title">주문하기</h1>
+    <p class="page-lead">배송지 입력 후 &quot;데모 주문 완료&quot;를 누르면 됩니다. 실제 결제는 PG 연동 후 구현합니다.</p>
+
+    <div class="alert alert-info">
+      로그인하지 않아도 데모 주문은 가능합니다. 실서비스에서는 회원/비회원 정책을 정하면 됩니다.
+    </div>
+
+    <div class="split-2">
+      <div class="card-panel">
+        <h2 style="margin-top:0;font-size:1.1rem;">배송 정보</h2>
+        <div class="form-group">
+          <label for="recv">받는 분</label>
+          <input type="text" id="recv" placeholder="홍길동" />
+        </div>
+        <div class="form-group">
+          <label for="phone">연락처</label>
+          <input type="tel" id="phone" placeholder="010-0000-0000" />
+        </div>
+        <div class="form-group">
+          <label for="addr">주소</label>
+          <textarea id="addr" rows="3" placeholder="도로명 주소"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="msg">배송 메시지</label>
+          <input type="text" id="msg" placeholder="문 앞에 놔주세요 (선택)" />
+        </div>
+      </div>
+
+      <div>
+        <div class="card-panel" style="margin-bottom:14px;">
+          <h2 style="margin-top:0;font-size:1.1rem;">주문 요약</h2>
+          <div id="checkout-lines" class="muted">불러오는 중…</div>
+          <p style="margin:16px 0 0;"><strong>합계</strong> <span id="checkout-sum" style="font-size:1.2rem;"></span></p>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-submit" style="width:100%; padding:14px;">
+          데모 주문 완료 (결제 없음)
+        </button>
+        <p class="muted" style="font-size:0.9rem; margin-top:10px;">
+          다음 단계: 토스 등 PG로 카드·간편결제 붙이면 이 버튼이 결제 시작으로 바뀝니다.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color:#0f172a;">샘플 쇼핑몰</strong>
+        <small>© <span id="year"></span> Sample Shop.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function findProduct(id) {
+      return SHOP_PRODUCTS.find(function (x) { return x.id === id; });
+    }
+    function fmt(n) { return "₩" + Number(n).toLocaleString("ko-KR"); }
+
+    (function () {
+      var items = ShopCart.load();
+      var el = document.getElementById("checkout-lines");
+      var sumEl = document.getElementById("checkout-sum");
+      if (items.length === 0) {
+        el.innerHTML = '장바구니가 비어 있습니다. <a class="link" href="products.html">상품 담기</a>';
+        sumEl.textContent = "";
+        document.getElementById("btn-submit").disabled = true;
+        return;
+      }
+      var sum = 0;
+      var lines = items
+        .map(function (line) {
+          var p = findProduct(line.id);
+          if (!p) return "";
+          var sub = p.price * line.qty;
+          sum += sub;
+          return "<div style=\"margin-bottom:8px;\">" + p.name + " × " + line.qty + " = " + fmt(sub) + "</div>";
+        })
+        .join("");
+      el.innerHTML = lines;
+      sumEl.textContent = fmt(sum);
+    })();
+
+    document.getElementById("btn-submit").addEventListener("click", function () {
+      if (ShopCart.load().length === 0) return;
+      var recv = document.getElementById("recv").value.trim();
+      var phone = document.getElementById("phone").value.trim();
+      var addr = document.getElementById("addr").value.trim();
+      if (!recv || !phone || !addr) {
+        alert("받는 분, 연락처, 주소를 입력해 주세요.");
+        return;
+      }
+      ShopCart.clear();
+      window.location.href = "order-complete.html";
+    });
+  </script>
+</body>
+</html>
